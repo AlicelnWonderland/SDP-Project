@@ -2,17 +2,19 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        // 1. Singleton: Database connection instance
+        ConsoleView view = new ConsoleView();
+        EcommerceController controller = new EcommerceController(view);
+
+
+        Customer customer1 = new Customer("Alice");
+        Customer customer2 = new Customer("Bob");
+
+
         DatabaseConnection dbConnection = DatabaseConnection.getInstance();
         dbConnection.connect();
 
-
-        Product electronics = ProductFactory.createProduct("Electronics");
-        electronics.create();
-
-        Product furniture = ProductFactory.createProduct("Furniture");
-        furniture.create();
-
+        controller.addProduct("Electronics");
+        controller.addProduct("Furniture");
 
         ExternalPaymentService externalPaymentService = new ExternalPaymentService();
         PaymentProcessor paymentProcessor = new PaymentAdapter(externalPaymentService);
@@ -24,16 +26,10 @@ public class Main {
         orderFacade.placeOrder(orderId);
 
 
-        Order order = new Order();
-        Customer customer1 = new Customer("Alice");
-        Customer customer2 = new Customer("Bob");
-
-        order.addObserver(customer1);
-        order.addObserver(customer2);
+        controller.placeOrder(orderId, customer1, customer2);
 
 
-        order.setStatus("Processing");
-        order.setStatus("Shipped");
+        controller.updateOrderStatus(orderId, "Shipped");
 
 
         OrderInvoker orderInvoker = new OrderInvoker();
