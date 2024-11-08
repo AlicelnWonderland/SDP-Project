@@ -1,0 +1,3 @@
+interface OrderCommand {
+    void execute();
+}
